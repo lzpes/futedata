@@ -1,0 +1,45 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# ---- Virtual environments ----
+.venv/
+venv/
+
+# ---- IDE ----
+.vscode/
+.idea/
+
+# ---- Environment & Secrets ----
+.env
+
+# ---- Data (stays local, never in Git) ----
+data/
+
+# ---- Notebooks checkpoints ----
+.ipynb_checkpoints/
+
+# ---- Terraform ----
+terraform/.terraform/
+terraform/**/.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- Testing / Linting ----
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
