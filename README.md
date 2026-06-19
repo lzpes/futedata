@@ -6,6 +6,10 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?logo=fastapi&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
+<p align="center">
+  <img src="docs/demo.webp" alt="FuteData BI Studio Demo" width="100%">
+</p>
+
 O **FuteData** é um Data Lakehouse analítico ponta-a-ponta que consome, trata e disponibiliza dados de milhares de jogadores e times do Transfermarkt, coroado por uma ferramenta de **Business Intelligence Self-Service (BI Studio)** para exploração interativa.
 
 ---
