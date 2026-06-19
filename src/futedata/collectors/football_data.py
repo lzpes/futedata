@@ -5,7 +5,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 from futedata.collectors.base import BaseCollector, CollectionResult
 from futedata.constants import (
-    BRASILEIRAO_CODE,
+    TARGET_COMPETITIONS_FD,
     DataSource,
     FOOTBALL_DATA_BASE_URL,
     FOOTBALL_DATA_REQUEST_INTERVAL_SECONDS,
@@ -42,52 +42,68 @@ class FootballDataCollector(BaseCollector):
         return response.json()
 
     def _collect_competition(self) -> CollectionResult:
-        data = self._get(f"/competitions/{BRASILEIRAO_CODE}")
+        all_comps = []
+        for code in TARGET_COMPETITIONS_FD:
+            data = self._get(f"/competitions/{code}")
+            all_comps.append(data)
+            self._rate_limit()
         return CollectionResult(
-            data=data,
-            rows=1,
+            data={"competitions": all_comps},
+            rows=len(all_comps),
             endpoint="competition",
-            schema_hash=compute_content_hash(str(data).encode()),
+            schema_hash=compute_content_hash(str(all_comps).encode()),
         )
 
     def _collect_matches(self) -> CollectionResult:
-        data = self._get(f"/competitions/{BRASILEIRAO_CODE}/matches")
-        matches = data.get("matches", [])
+        all_matches = []
+        for code in TARGET_COMPETITIONS_FD:
+            data = self._get(f"/competitions/{code}/matches")
+            all_matches.extend(data.get("matches", []))
+            self._rate_limit()
         return CollectionResult(
-            data=data,
-            rows=len(matches),
+            data={"matches": all_matches},
+            rows=len(all_matches),
             endpoint="matches",
-            schema_hash=compute_content_hash(str(data).encode()),
+            schema_hash=compute_content_hash(str(all_matches).encode()),
         )
 
     def _collect_standings(self) -> CollectionResult:
-        data = self._get(f"/competitions/{BRASILEIRAO_CODE}/standings")
-        standings = data.get("standings", [])
+        all_standings = []
+        for code in TARGET_COMPETITIONS_FD:
+            data = self._get(f"/competitions/{code}/standings")
+            all_standings.extend(data.get("standings", []))
+            self._rate_limit()
         return CollectionResult(
-            data=data,
-            rows=len(standings),
+            data={"standings": all_standings},
+            rows=len(all_standings),
             endpoint="standings",
-            schema_hash=compute_content_hash(str(data).encode()),
+            schema_hash=compute_content_hash(str(all_standings).encode()),
         )
 
     def _collect_teams(self) -> CollectionResult:
-        data = self._get(f"/competitions/{BRASILEIRAO_CODE}/teams")
-        teams = data.get("teams", [])
+        all_teams = []
+        for code in TARGET_COMPETITIONS_FD:
+            data = self._get(f"/competitions/{code}/teams")
+            all_teams.extend(data.get("teams", []))
+            self._rate_limit()
         return CollectionResult(
-            data=data,
-            rows=len(teams),
+            data={"teams": all_teams},
+            rows=len(all_teams),
             endpoint="teams",
-            schema_hash=compute_content_hash(str(data).encode()),
+            schema_hash=compute_content_hash(str(all_teams).encode()),
         )
 
     def _collect_scorers(self) -> CollectionResult:
-        data = self._get(f"/competitions/{BRASILEIRAO_CODE}/scorers")
-        scorers = data.get("scorers", [])
+        all_scorers = []
+        for code in TARGET_COMPETITIONS_FD:
+            data = self._get(f"/competitions/{code}/scorers")
+            all_scorers.extend(data.get("scorers", []))
+            self._rate_limit()
         return CollectionResult(
-            data=data,
-            rows=len(scorers),
+            data={"scorers": all_scorers},
+            rows=len(all_scorers),
             endpoint="scorers",
-            schema_hash=compute_content_hash(str(data).encode()),
+            schema_hash=compute_content_hash(str(all_scorers).encode()),
         )
 
     def collect(self) -> list[CollectionResult]:
@@ -109,7 +125,6 @@ class FootballDataCollector(BaseCollector):
                 logger.info("endpoint_fetched", endpoint=name, rows=result.rows)
             except Exception as e:
                 logger.error("endpoint_failed", endpoint=name, error=str(e))
-            self._rate_limit()
 
         return results
 

@@ -62,6 +62,14 @@ class Settings(BaseSettings):
     # ---- Databricks (Phase 4+) -------------------------------------------
     databricks_host: Optional[str] = Field(default=None)
     databricks_token: Optional[str] = Field(default=None)
+    
+    # ---- S3 Storage ------------------------------------------------------
+    use_s3: bool = Field(default=True, description="Save data to AWS S3 instead of local disk")
+    s3_raw_bucket: str = Field(default="futedata-scoutmarket-raw")
+    s3_validated_bucket: str = Field(default="futedata-scoutmarket-silver")
+    s3_audit_bucket: str = Field(default="futedata-scoutmarket-audit")
+    s3_bronze_bucket: str = Field(default="futedata-scoutmarket-bronze")
+    s3_gold_bucket: str = Field(default="futedata-scoutmarket-gold")
 
     @field_validator("log_level")
     @classmethod

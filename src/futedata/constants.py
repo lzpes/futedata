@@ -4,8 +4,8 @@ from enum import StrEnum
 FOOTBALL_DATA_BASE_URL = "https://api.football-data.org/v4"
 TRANSFERMARKT_KAGGLE_DATASET = "davidcariboo/player-scores"
 
-BRASILEIRAO_CODE = "BSA"
-BRASILEIRAO_COMPETITION_ID = 2013
+TARGET_COMPETITIONS_FD = ["PL", "PD", "SA", "BL1", "FL1", "BSA"]
+TARGET_COMPETITIONS_TM = ["GB1", "ES1", "IT1", "L1", "FR1", "BRA1"]
 
 
 class DataSource(StrEnum):

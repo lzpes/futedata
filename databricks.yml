@@ -1,0 +1,21 @@
+bundle:
+  name: futedata
+
+sync:
+  include:
+    - "data/**/*"
+
+artifacts:
+  default:
+    type: whl
+    build: .\.venv\Scripts\python -m build
+    path: .
+
+resources:
+  jobs:
+    futedata_pipeline:
+      name: "[FuteData] Lakehouse Transformers"
+      tasks:
+        - task_key: run_all_transformers
+          notebook_task:
+            notebook_path: "run_transform.py"

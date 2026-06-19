@@ -5,7 +5,7 @@ import httpx
 import pandas as pd
 
 from futedata.collectors.base import BaseCollector, CollectionResult
-from futedata.constants import DataSource
+from futedata.constants import DataSource, TARGET_COMPETITIONS_TM
 from futedata.utils.io import compute_schema_hash, write_csv
 from futedata.utils.logging import get_logger
 
@@ -24,9 +24,7 @@ DATASETS = [
     "game_lineups",
 ]
 
-BRASILEIRAO_COMPETITION_IDS = [
-    "BRA1",
-]
+# Competições importadas de constants.py
 
 
 class TransfermarktCollector(BaseCollector):
@@ -58,10 +56,10 @@ class TransfermarktCollector(BaseCollector):
         original_len = len(df)
 
         if name == "competitions":
-            df = df[df["competition_id"].isin(BRASILEIRAO_COMPETITION_IDS)]
+            df = df[df["competition_id"].isin(TARGET_COMPETITIONS_TM)]
 
         elif name == "clubs":
-            df = df[df["domestic_competition_id"].isin(BRASILEIRAO_COMPETITION_IDS)]
+            df = df[df["domestic_competition_id"].isin(TARGET_COMPETITIONS_TM)]
 
         elif name == "players":
             if hasattr(self, "_club_ids"):
