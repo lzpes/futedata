@@ -40,8 +40,11 @@ def create_views():
             CAST(p.total_goals + p.total_assists AS FLOAT) / NULLIF(p.total_minutes, 0) * 90, 2
         ) AS contributions_per_90,
         
-        -- Metric: Upside Potential
-        (p.highest_market_value_in_eur - p.market_value_in_eur) AS upside_value,
+        -- Metric: Upside Potential (Regra de Negócio: Jogadores > 29 anos não têm upside financeiro de revenda)
+        CASE 
+            WHEN p.age <= 29 THEN (p.highest_market_value_in_eur - p.market_value_in_eur)
+            ELSE 0 
+        END AS upside_value,
         
         p.contract_expiration_date,
         p.image_url
