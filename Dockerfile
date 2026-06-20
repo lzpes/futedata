@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
 COPY . /app/
 
 # Instalar os pacotes necessários da API
-RUN pip install --no-cache-dir fastapi uvicorn pymssql sqlalchemy pydantic python-dotenv
+RUN pip install --no-cache-dir fastapi uvicorn pymssql sqlalchemy pydantic python-dotenv pandas
 
 # Exportar a porta
 EXPOSE 8000
