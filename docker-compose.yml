@@ -24,6 +24,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: futedata-api
+    environment:
+      - DB_HOST=sqlserver
     ports:
       - "8000:8000"
     depends_on:

@@ -13,7 +13,8 @@ from urllib.parse import quote_plus
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
 
 password = quote_plus("FuteData@2026!")
-db_url = f"mssql+pymssql://sa:{password}@localhost:1433/FuteData"
+db_host = os.getenv("DB_HOST", "localhost")
+db_url = f"mssql+pymssql://sa:{password}@{db_host}:1433/FuteData"
 engine = create_engine(db_url)
 
 @asynccontextmanager
