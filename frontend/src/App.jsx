@@ -23,6 +23,12 @@ const COLUMN_LABELS = {
   "total_minutes": "Minutos Jogados",
   "cost_per_contribution": "Custo por Participação (€)",
   "contributions_per_90": "Participações por 90 min",
+  "defensive_reliability": "Consistência Defensiva",
+  "impact_score": "Score de Impacto Global",
+  "cost_per_impact": "Custo por Ponto de Impacto (€)",
+  "tackles_per_90": "Desarmes / 90min",
+  "interceptions_per_90": "Intercept. / 90min",
+  "pass_completion_pct": "Passes Certos (%)",
   "contract_expiration_date": "Fim do Contrato"
 }
 
@@ -281,13 +287,27 @@ function App() {
                       <select className="input-select" value={f.op} onChange={(e) => updateFilter(i, 'op', e.target.value)}>
                         {FILTER_OPS.map(o => <option key={o} value={o}>{o}</option>)}
                       </select>
-                      <input 
-                        type="text" 
-                        className="input-text" 
-                        placeholder="Insira um valor..." 
-                        value={f.val}
-                        onChange={(e) => updateFilter(i, 'val', e.target.value)}
-                      />
+                      {f.col === 'position' ? (
+                        <select 
+                          className="input-select" 
+                          value={f.val}
+                          onChange={(e) => updateFilter(i, 'val', e.target.value)}
+                        >
+                          <option value="">Selecione...</option>
+                          <option value="Attack">Ataque</option>
+                          <option value="Midfield">Meio-Campo</option>
+                          <option value="Defender">Defesa</option>
+                          <option value="Goalkeeper">Goleiro</option>
+                        </select>
+                      ) : (
+                        <input 
+                          type="text" 
+                          className="input-text" 
+                          placeholder="Insira um valor..." 
+                          value={f.val}
+                          onChange={(e) => updateFilter(i, 'val', e.target.value)}
+                        />
+                      )}
                       <button className="btn-icon-danger" onClick={() => removeFilter(i)}><Trash2 size={14}/></button>
                     </div>
                   ))}
@@ -423,14 +443,39 @@ function App() {
 
                   {/* Eficiência */}
                   <div className="profile-card">
-                    <div className="card-header"><Target size={16}/> Eficiência de Investimento</div>
+                    <div className="card-header"><Target size={16}/> Impacto e Investimento</div>
+                    <div className="card-stat">
+                      <label>Score de Impacto Global</label>
+                      <span className="text-success">{playerDetails.impact_score}</span>
+                    </div>
+                    <div className="card-stat">
+                      <label>Custo por Impacto</label>
+                      <span>{formatCurrency(playerDetails.cost_per_impact)}</span>
+                    </div>
                     <div className="card-stat">
                       <label>Custo por G/A</label>
                       <span>{formatCurrency(playerDetails.cost_per_contribution)}</span>
                     </div>
+                  </div>
+
+                  {/* FBRef Defesa e Construção */}
+                  <div className="profile-card">
+                    <div className="card-header"><Activity size={16}/> FBRef: Defesa e Passe</div>
                     <div className="card-stat">
-                      <label>G/A a cada 90 min</label>
-                      <span>{playerDetails.contributions_per_90}</span>
+                      <label>Desarmes / 90min</label>
+                      <span>{playerDetails.tackles_per_90}</span>
+                    </div>
+                    <div className="card-stat">
+                      <label>Interceptações / 90min</label>
+                      <span>{playerDetails.interceptions_per_90}</span>
+                    </div>
+                    <div className="card-stat">
+                      <label>Acerto de Passes</label>
+                      <span>{playerDetails.pass_completion_pct}%</span>
+                    </div>
+                    <div className="card-stat">
+                      <label>Índice Defensivo</label>
+                      <span>{playerDetails.defensive_reliability}</span>
                     </div>
                   </div>
 

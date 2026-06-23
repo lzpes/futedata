@@ -73,23 +73,23 @@ def get_summary():
 def get_undervalued_players():
     q = """
         SELECT TOP 15
-            p.name AS Jogador,
-            p.age AS Idade,
-            p.position AS Posicao,
-            p.current_club_name AS Clube,
-            p.country_of_citizenship AS Pais,
-            (p.total_goals + p.total_assists) AS Participacoes_Gol,
-            p.total_minutes AS Minutos,
-            ROUND(p.market_value_in_eur / 1000000.0, 2) AS Valor_Mi_EUR,
-            ROUND(CAST(p.total_goals + p.total_assists AS FLOAT) / NULLIF(p.total_minutes, 0) * 90, 2) AS Gol_Assist_Per_90min,
-            ROUND(p.market_value_in_eur / NULLIF(p.total_goals + p.total_assists, 0), 0) AS Custo_Por_GA
-        FROM dim_players p
-        WHERE p.age <= 25
-          AND p.total_minutes >= 2000
-          AND (p.total_goals + p.total_assists) >= 10
-          AND p.market_value_in_eur <= 5000000
-          AND p.market_value_in_eur > 0
-        ORDER BY Gol_Assist_Per_90min DESC;
+            player_name AS Jogador,
+            age AS Idade,
+            position AS Posicao,
+            club_name AS Clube,
+            nationality AS Pais,
+            impact_score AS Score_Impacto,
+            defensive_reliability AS Indice_Defensivo,
+            total_minutes AS Minutos,
+            ROUND(market_value_in_eur / 1000000.0, 2) AS Valor_Mi_EUR,
+            cost_per_impact AS Custo_Por_Impacto_EUR
+        FROM vw_master_scout
+        WHERE age <= 25
+          AND total_minutes >= 2000
+          AND impact_score > 5
+          AND market_value_in_eur <= 5000000
+          AND market_value_in_eur > 0
+        ORDER BY cost_per_impact ASC;
     """
     return run_query(q)
 

@@ -28,6 +28,8 @@ services:
       - DB_HOST=sqlserver
     ports:
       - "8000:8000"
+    volumes:
+      - .:/app
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -39,6 +41,9 @@ services:
     container_name: futedata-frontend
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     depends_on:
       - api
 

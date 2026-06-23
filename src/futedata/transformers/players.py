@@ -14,14 +14,17 @@ class PlayersTransformer(BaseTransformer):
     def extract(self) -> dict[str, DataFrame]:
         tm_players = self.read_csv("raw/transfermarkt/players/players.csv")
         tm_appearances = self.read_csv("raw/transfermarkt/appearances/appearances.csv")
+        fbref_defense = self.read_csv("raw/fbref/defense.csv")
         return {
             "tm_players": tm_players,
             "tm_appearances": tm_appearances,
+            "fbref_defense": fbref_defense,
         }
 
     def transform(self, raw: dict[str, DataFrame]) -> DataFrame:
         tm = raw["tm_players"]
         apps = raw["tm_appearances"]
+        fb = raw["fbref_defense"]
 
         # Agregação distribuída (PySpark GroupBy)
         agg = apps.groupBy("player_id").agg(
@@ -33,8 +36,9 @@ class PlayersTransformer(BaseTransformer):
             F.count("appearance_id").alias("total_appearances"),
         )
 
-        # Join dos jogadores com as estatísticas agregadas
+        # Join dos jogadores com as estatísticas agregadas e dados defensivos
         df = tm.join(agg, on="player_id", how="left")
+        df = df.join(fb, on="player_id", how="left")
 
         # FillNA e cast para Integer (tratar Nulls como 0 para métricas)
         metric_cols = [
@@ -53,6 +57,11 @@ class PlayersTransformer(BaseTransformer):
         else:
             df = df.withColumn("age", F.lit(None).cast(IntegerType()))
 
+        # FillNA para colunas FBRef
+        fbref_cols = ["tackles_per_90", "interceptions_per_90", "pass_completion_pct"]
+        for col in fbref_cols:
+            df = df.withColumn(col, F.coalesce(F.col(col), F.lit(0.0)).cast("float"))
+
         # Selecionar e ordenar as colunas finais
         final_cols = [
             "player_id", "name", "first_name", "last_name",
@@ -67,6 +76,7 @@ class PlayersTransformer(BaseTransformer):
             "total_minutes", "total_appearances",
             "contract_expiration_date", "agent_name",
             "image_url",
+            "tackles_per_90", "interceptions_per_90", "pass_completion_pct"
         ]
         
         # Manter apenas as colunas que realmente existem no DataFrame

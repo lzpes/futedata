@@ -53,7 +53,10 @@ CREATE TABLE dim_players (
     total_appearances INT,
     contract_expiration_date DATE,
     agent_name VARCHAR(255),
-    image_url VARCHAR(500)
+    image_url VARCHAR(500),
+    tackles_per_90 FLOAT,
+    interceptions_per_90 FLOAT,
+    pass_completion_pct FLOAT
 );
 
 -- Tabela Fato

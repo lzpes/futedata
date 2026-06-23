@@ -30,7 +30,37 @@ def create_views():
         p.total_minutes,
         (p.total_goals + p.total_assists) AS goal_contributions,
         
-        -- Metric: Cost per Goal Contribution
+        -- Metric: Defensive Reliability (Avaliação baseada em desarmes, interceptações e passes certos)
+        ROUND(
+            (p.tackles_per_90 * 2.0) + (p.interceptions_per_90 * 1.5) + (p.pass_completion_pct / 100.0 * 2.0), 2
+        ) AS defensive_reliability,
+
+        -- Metric: Overall Impact Score (Ajustado por Posição combinando Transfermarkt e FBRef)
+        ROUND(
+            CASE 
+                WHEN p.position = 'Attack' THEN (p.total_goals * 2.0 + p.total_assists * 1.5)
+                WHEN p.position = 'Midfield' THEN (p.total_goals * 1.5 + p.total_assists * 1.5) + (p.tackles_per_90 * 1.0) + (p.pass_completion_pct / 100.0 * 2.0)
+                WHEN p.position = 'Defender' THEN (p.tackles_per_90 * 2.0) + (p.interceptions_per_90 * 1.5) + (p.pass_completion_pct / 100.0 * 2.0)
+                WHEN p.position = 'Goalkeeper' THEN (p.pass_completion_pct / 100.0 * 5.0) - (p.total_red * 3.0)
+                ELSE (p.total_goals + p.total_assists)
+            END, 2
+        ) AS impact_score,
+
+        -- Metric: Cost per Impact
+        ROUND(
+            CAST(p.market_value_in_eur AS FLOAT) / 
+            NULLIF(
+                CASE 
+                    WHEN p.position = 'Attack' THEN (p.total_goals * 2.0 + p.total_assists * 1.5)
+                    WHEN p.position = 'Midfield' THEN (p.total_goals * 1.5 + p.total_assists * 1.5) + (p.tackles_per_90 * 1.0) + (p.pass_completion_pct / 100.0 * 2.0)
+                    WHEN p.position = 'Defender' THEN (p.tackles_per_90 * 2.0) + (p.interceptions_per_90 * 1.5) + (p.pass_completion_pct / 100.0 * 2.0)
+                    WHEN p.position = 'Goalkeeper' THEN (p.pass_completion_pct / 100.0 * 5.0) - (p.total_red * 3.0)
+                    ELSE (p.total_goals + p.total_assists)
+                END, 0
+            ), 0
+        ) AS cost_per_impact,
+        
+        -- Metric: Cost per Goal Contribution (Legacy para atacantes)
         ROUND(
             CAST(p.market_value_in_eur AS FLOAT) / NULLIF((p.total_goals + p.total_assists), 0), 0
         ) AS cost_per_contribution,
