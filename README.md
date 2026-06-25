@@ -100,7 +100,7 @@ Star schema em SQL Server: `dim_players`, `dim_clubs` como dimensões; `fact_mat
 | Transformação | PySpark |
 | Armazenamento analítico | SQL Server 2022 (star schema) |
 | Orquestração cloud | Databricks Asset Bundles |
-| Infraestrutura | Terraform (AWS: S3, RDS, IAM, Secrets Manager) |
+| Infraestrutura | AWS: S3, RDS, IAM, Secrets Manager |
 | Qualidade | pytest, black, isort, flake8, mypy (ver `Makefile`) |
 
 ---
@@ -126,16 +126,6 @@ python run_transform.py        # transformações PySpark -> SQL Server (star sc
 python analytics.py            # roda as 7 análises exploratórias de validação
 ```
 
-### Testes e qualidade
-```bash
-make test     # pytest
-make lint     # flake8 + mypy
-make format   # black + isort
-```
-
----
-
-## ⚠️ Nota de segurança (ambiente local)
 
 A senha do SQL Server está hardcoded em `docker-compose.yml`, `analytics.py` e `create_master_view.py` para simplificar o setup local. Em qualquer ambiente além de desenvolvimento, isso deve vir de variável de ambiente ou do Secrets Manager já provisionado no Terraform (`terraform/secrets.tf`).
 
