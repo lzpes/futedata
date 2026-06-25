@@ -4,11 +4,9 @@
 ![PySpark](https://img.shields.io/badge/PySpark-Transformers-E25A1C?logo=apachespark&logoColor=white)
 ![SQL Server](https://img.shields.io/badge/SQL_Server-2022-CC2927?logo=microsoft-sql-server&logoColor=white)
 ![Databricks](https://img.shields.io/badge/Databricks-Asset_Bundles-FF3621?logo=databricks&logoColor=white)
-![Terraform](https://img.shields.io/badge/Terraform-AWS-7B42BC?logo=terraform&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
-Pipeline de dados ponta-a-ponta sobre o mercado de transferências do futebol mundial, construído sobre dados públicos do Transfermarkt e da football-data.org. Cobre coleta auditada, validação, transformação com PySpark e modelagem dimensional em SQL Server, com infraestrutura como código e orquestração via Databricks Asset Bundles.
 
+Pipeline de dados ponta-a-ponta sobre o mercado de transferências do futebol mundial, construído sobre dados públicos do Transfermarkt e da football-data.org. Cobre coleta auditada, validação, transformação com PySpark e modelagem dimensional em SQL Server
 ---
 
 ## Volume de dados
